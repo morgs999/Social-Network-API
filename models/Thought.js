@@ -1,4 +1,4 @@
-const { Schema, Types } = require('mongoose');
+const { Schema, model } = require('mongoose');
 const dayjs = require('dayjs');
 const reactionSchema = require('./Reaction');
 
@@ -9,25 +9,22 @@ const thoughtSchema = new Schema(
             required: true,
             minlength: 1,
             maxlength: 280
-        }
-    },
-    {
+        },
+
         createdAt: {
             type: Date,
             default: Date.now,
-            get: format(function (date) {
+            get: (date) => {
                 dayjs(date).format("MM/DD/YY @ hh:mm")
-            })
-        }
-    },
-    {
+            }
+        },
+
         userName: {
             type: String,
             required: true,
             ref: 'user'
-        }
-    },
-    {
+        },
+
         reactions: [reactionSchema]
     },
     {
