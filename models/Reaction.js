@@ -14,9 +14,10 @@ const reactionSchema = new Schema(
             maxlength: 280
         },
 
-        username: {
+        userName: {
             type: String,
-            required: true
+            required: true,
+            ref: 'user'
         },
 
         createdAt: {

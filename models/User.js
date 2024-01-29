@@ -2,12 +2,6 @@ const { ObjectId } = require('mongoose').Types;
 const { Schema, model } = require('mongoose');
 
 const userSchema = new Schema(
-    // {
-    //     userId: {
-    //         type: Schema.Types.ObjectId,
-    //         default: () => new Types.ObjectId()
-    //     }
-    // },
     {
         userName: {
             type: String,
@@ -39,13 +33,13 @@ const userSchema = new Schema(
     },
     {
         toJSON: {
-            virtuals: true,
+            // virtuals: true,
             getters: true
         },
-        toObject: {
-            virtuals: true,
-            getters: true
-        }
+        // toObject: {
+        //     virtuals: true,
+        //     getters: true
+        // }
     }
 );
 
