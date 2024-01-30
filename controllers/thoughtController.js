@@ -1,4 +1,3 @@
-const { ObjectId } = require('mongoose').Types;
 const { User, Thought } = require('../models');
 
 module.exports = {
@@ -19,9 +18,7 @@ module.exports = {
             const thought = await Thought.findOne(
                 {
                     _id: req.params.thoughtId
-                }).select('-__v')
-                .populate('thoughts', '-__v')
-                .populate('friends', '-__v');
+                });
 
             if (!thought) {
                 return res.status(404).json({ message: 'No thought matching ID' });
@@ -40,6 +37,29 @@ module.exports = {
     async createThought(req, res) {
         try {
             const thought = await Thought.create(req.body);
+            const user = await User.findOneAndUpdate(
+                {
+                    _id: req.body.userId
+                },
+                {
+                    $push: {
+                        thoughts: {
+                            thoughtText: req.body.thoughtText,
+                            userName: req.body.userName,
+                            _id: thought._id
+                        }
+                    }
+                },
+                {
+                    runValidators: true, new: true
+                }
+            );
+
+            if (!user) {
+                return res.status(404).json({
+                    message: "No User with that ID."
+                })
+            }
             res.json(thought);
         } catch (err) {
             console.log(err, 'createthought');
@@ -127,7 +147,12 @@ module.exports = {
                     _id: req.params.thoughtId
                 },
                 {
-                    $addToSet: { reactions: req.params.reactionId }
+                    $addToSet: {
+                        reactions: {
+                            userName: req.body.userName,
+                            reactionBody: req.body.reactionBody,
+                        }
+                    }
                 },
                 {
                     runValidators: true, new: true
@@ -156,11 +181,7 @@ module.exports = {
                     _id: req.params.thoughtId
                 },
                 {
-                    $pull: {
-                        reactions: {
-                            reactionId: req.params.reactionId
-                        }
-                    }
+                    $pull: { reactions: req.params.reactionId }
                 },
                 {
                     runValidators: true, new: true

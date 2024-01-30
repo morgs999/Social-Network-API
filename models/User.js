@@ -1,4 +1,3 @@
-const { ObjectId } = require('mongoose').Types;
 const { Schema, model } = require('mongoose');
 
 const userSchema = new Schema(
@@ -33,13 +32,10 @@ const userSchema = new Schema(
     },
     {
         toJSON: {
-            // virtuals: true,
+            virtuals: true,
             getters: true
         },
-        // toObject: {
-        //     virtuals: true,
-        //     getters: true
-        // }
+        id: false
     }
 );
 
